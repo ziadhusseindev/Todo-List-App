@@ -1,13 +1,46 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 
-const Todo = ({ isDarkMode }) => {
+const Todo = ({ isDarkMode, isArabic }) => {
   const [todos, setTodos] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [filter, setFilter] = useState('all');
   const [isLoading, setIsLoading] = useState(true);
   const [editingId, setEditingId] = useState(null);
   const [editValue, setEditValue] = useState('');
+
+  // Translations object
+  const translations = {
+    english: {
+      tasks: 'Tasks',
+      placeholder: 'What needs to be done?',
+      add: 'Add',
+      noTasks: 'No tasks yet. Add one above!',
+      noActiveTasks: 'No active tasks!',
+      noCompletedTasks: 'No completed tasks!',
+      itemsLeft: 'item(s) left',
+      all: 'All',
+      active: 'Active',
+      completed: 'Completed',
+      clearCompleted: 'Clear completed',
+    },
+    arabic: {
+      tasks: 'المهام',
+      placeholder: 'ما الذي يجب القيام به؟',
+      add: 'إضافة',
+      noTasks: 'لا توجد مهام بعد. أضف واحدة أعلاه!',
+      noActiveTasks: 'لا توجد مهام نشطة!',
+      noCompletedTasks: 'لا توجد مهام مكتملة!',
+      itemsLeft: 'عنصر متبقي',
+      all: 'الكل',
+      active: 'نشط',
+      completed: 'مكتمل',
+      clearCompleted: 'مسح المكتملة',
+    }
+  };
+
+  // Get current language translations
+  const t = isArabic ? translations.arabic : translations.english;
 
   // Load todos from localStorage on component mount
   useEffect(() => {
@@ -37,7 +70,7 @@ const Todo = ({ isDarkMode }) => {
       setTodos([...todos, newTodo]);
       setInputValue('');
     }
-  };
+  };  
 
   const toggleTodo = (id) => {
     setTodos(
@@ -54,7 +87,7 @@ const Todo = ({ isDarkMode }) => {
   const startEditing = (id, text) => {
     setEditingId(id);
     setEditValue(text);
-  };
+  };  
 
   const saveEdit = () => {
     if (editValue.trim() !== '') {
@@ -103,7 +136,7 @@ const Todo = ({ isDarkMode }) => {
         <div className="w-full p-4">
           <div className="mb-4">
             <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-              Tasks
+              {t.tasks}
             </h2>
           </div>
 
@@ -115,7 +148,7 @@ const Todo = ({ isDarkMode }) => {
               className={`appearance-none bg-transparent border-none w-full mr-3 py-1 px-2 leading-tight focus:outline-none ${
                 isDarkMode ? 'text-white placeholder-gray-400' : 'text-gray-700 placeholder-gray-500'
               }`}
-              placeholder="What needs to be done?"
+              placeholder={t.placeholder}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && addTodo()}
@@ -124,18 +157,18 @@ const Todo = ({ isDarkMode }) => {
               className="flex-shrink-0 bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-4 text-white py-1 px-2 rounded transition-all duration-200 hover:scale-105 active:scale-95"
               onClick={addTodo}
             >
-              Add
+              {t.add}
             </button>
           </div>
 
           <ul className={`${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-            {filteredTodos.length === 0 ? (
+            {filteredTodos.length === 0 ? ( 
               <li className={`py-4 text-center ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} animate-pulse-slow`}>
                 {filter === 'all' 
-                  ? 'No tasks yet. Add one above!' 
+                  ? t.noTasks 
                   : filter === 'active' 
-                    ? 'No active tasks!' 
-                    : 'No completed tasks!'}
+                    ? t.noActiveTasks 
+                    : t.noCompletedTasks}
               </li>
             ) : (
               filteredTodos.map((todo, index) => (
@@ -234,7 +267,7 @@ const Todo = ({ isDarkMode }) => {
             <div className={`flex flex-col sm:flex-row justify-between items-center mt-4 text-sm ${
               isDarkMode ? 'text-gray-400' : 'text-gray-500'
             } animate-slide-up`} style={{ animationDelay: '0.2s' }}>
-              <span className="mb-2 sm:mb-0">{activeTodosCount} item{activeTodosCount !== 1 ? 's' : ''} left</span>
+              <span className="mb-2 sm:mb-0">{activeTodosCount} {t.itemsLeft}</span>
               <div className="flex space-x-1 mb-2 sm:mb-0">
                 <button
                   className={`px-2 py-1 rounded transition-all duration-200 hover:scale-105 ${
@@ -248,7 +281,7 @@ const Todo = ({ isDarkMode }) => {
                   }`}
                   onClick={() => setFilter('all')}
                 >
-                  All
+                  {t.all}
                 </button>
                 <button
                   className={`px-2 py-1 rounded transition-all duration-200 hover:scale-105 ${
@@ -262,7 +295,7 @@ const Todo = ({ isDarkMode }) => {
                   }`}
                   onClick={() => setFilter('active')}
                 >
-                  Active
+                  {t.active}
                 </button>
                 <button
                   className={`px-2 py-1 rounded transition-all duration-200 hover:scale-105 ${
@@ -276,7 +309,7 @@ const Todo = ({ isDarkMode }) => {
                   }`}
                   onClick={() => setFilter('completed')}
                 >
-                  Completed
+                  {t.completed}
                 </button>
               </div>
               <button
@@ -287,7 +320,7 @@ const Todo = ({ isDarkMode }) => {
                 } transition-all duration-200 hover:scale-105`}
                 onClick={clearCompleted}
               >
-                Clear completed
+                {t.clearCompleted}
               </button>
             </div>
           )}
