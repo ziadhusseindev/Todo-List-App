@@ -128,7 +128,7 @@ const Todo = ({ isDarkMode }) => {
             </button>
           </div>
 
-          <ul className={`divide-y ${isDarkMode ? 'divide-gray-700' : 'divide-gray-200'}`}>
+          <ul className={`${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
             {filteredTodos.length === 0 ? (
               <li className={`py-4 text-center ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} animate-pulse-slow`}>
                 {filter === 'all' 
@@ -143,7 +143,7 @@ const Todo = ({ isDarkMode }) => {
                   key={todo.id} 
                   className={`py-3 flex justify-between items-center transition-all duration-300 ${
                     todo.completed ? 'bg-opacity-50' : ''
-                  } animate-slide-up`}
+                  } animate-slide-up ${index !== 0 ? 'mt-2' : ''}`}
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   {editingId === todo.id ? (
